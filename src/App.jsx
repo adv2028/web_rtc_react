@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react"
-import Peer from "peerjs"
+import socketIOClient from "socket.io-client"
+
 import './App.css'
+
+const WS = "http://localhost:8080/"
+// connect the client with the server
+
 
 function App() {
   const [peerId, setPeerId] = useState(null)
@@ -11,6 +16,8 @@ function App() {
   const currentVideoRef = useRef()
 
   useEffect(() => {
+    const ws = socketIOClient(WS)
+    ws.emit("join-room")
     const peer = new Peer({
       host: '/',
       port: '3001'
@@ -41,6 +48,8 @@ function App() {
     })
 
     peerInstance.current = peer
+
+
   }, [])
 
   const call = (remotePeerId) => {
